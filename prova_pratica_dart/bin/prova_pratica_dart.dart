@@ -106,22 +106,28 @@ void main(List<String> arguments) async {
 
   var json = jsonEncode(informatica.toJson());
 
-  final smtpServer = gmail('joao.andrade09@aluno.ifce.edu.br', 'uplj hmee vmdc qdwc');
+  final arquivo = File('curso.json');
+  await arquivo.writeAsString(json);
+
+  final smtpServer =
+      gmail('joao.andrade09@aluno.ifce.edu.br', 'uplj hmee vmdc qdwc');
 
   final message = Message()
     ..from = Address('joao.andrade09@aluno.ifce.edu.br', 'eu')
-    ..recipients.add('jmfp2018@gmail.com')
+    ..recipients.add('taveira@ifce.edu.br')
     ..subject = 'prova'
-    ..text = json;
+    ..text = "Prova do aluno João Pedro de Andrade Holanda"
+    ..attachments = [
+      FileAttachment(arquivo)
+        ..location = Location.attachment
+        ..fileName = 'curso.json'
+    ];
 
   try {
-    
     final sendReport = await send(message, smtpServer);
 
-    
     print("E-mail enviado");
   } on MailerException catch (e) {
-    
     print('Erro ao enviar e-mail: ${e.toString()}');
   }
 }
